@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <style>
+        p{
+            margin: 0;
+            padding: 0;
+        }
+        body{
+            width: 100%;
+            height:100%;
+        }
+        .box{
+            width: 300px;
+            height: 50px;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #ccc;
+            top: 40px;
+        }
+        .bg{
+            width: 0px;
+            height: 50px;
+            background: green;
+            position:absolute;
+            left: 0;
+            top: 0;
+            z-index: 1;
+        }
+        .text{
+            line-height: 50px;
+            font-size: 16px;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+        }
+        .kuai{
+            width: 60px;
+            height: 50px;
+            background: blue;
+            position:absolute;
+            left: 0;
+            top: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 3;
+        }
+        .kuai span{
+            font-size: 16px;
+            color: #fff;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="box">
+        <div class="kuai"><span>>></span></div>
+        <p class="text">拖动滑块进行验证</p>
+        <div class="bg"></div>
+    </div>
+
+<script>
+    class Box{
+        constructor(){
+            this.box = document.querySelector('.box');
+            this.kuai = document.querySelector('.kuai');
+            this.text = document.querySelector('.text');
+            this.bg = document.querySelector('.bg');
+            this.init();
+            this.ditX = 0;
+            this.move = 0;
+            this.falg = false;
+        }
+        init(){
+            this.kuai.onmousedown = function(event){
+                this.ditX = event.clientX - this.kuai.offsetLeft;
+                document.onmousemove = this.FnMove.bind(this);
+                document.onmouseup = this.FnUp.bind(this);
+                return false;
+            }.bind(this);
+        }
+        FnMove(event){
+            this.move = event.clientX - this.ditX;
+            if(this.move >= 0){
+                this.kuai.style.left = this.move + 'px';
+                this.bg.style.width = this.move + 'px';
+                if(this.move > this.box.offsetWidth - this.kuai.offsetWidth){
+                    this.falg = true;
+                    this.text.innerText = '验证成功';
+                    this.text.style.color = '#fff';
+                    this.kuai.onmousedown = null;
+                    document.onmousemove = null;
+                    
+                }
+            }
+        }
+        FnUp(event){
+            document.onmousemove = null;
+            if(this.falg) return;
+            this.kuai.style.left = 0 + 'px';
+            this.bg.style.width = 0 + 'px';
+        }
+    }
+    new Box()
+</script>
+</body>
+</html>
